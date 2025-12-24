@@ -5,19 +5,33 @@ import { motion } from 'framer-motion';
 import { FaCode, FaGraduationCap, FaRocket, FaHeart, FaLightbulb } from 'react-icons/fa';
 
 const About = () => {
+  const [leetcodeCount, setLeetcodeCount] = React.useState(null);
+
+  React.useEffect(() => {
+    fetch('/api/leetcode?username=pyro_hvp021')
+      .then(res => res.json())
+      .then(data => {
+        if (data.matchedUser) {
+          const all = data.matchedUser.submitStats.acSubmissionNum.find(s => s.difficulty === 'All').count;
+          setLeetcodeCount(all);
+        }
+      })
+      .catch(err => console.error(err));
+  }, []);
+
   return (
-    <section 
-      id="about" 
+    <section
+      id="about"
       className="py-16 sm:py-20 md:py-24 bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-white"
       aria-labelledby="about-heading"
     >
       <div className="container mx-auto px-4 sm:px-6 lg:px-8">
-        <motion.h2 
+        <motion.h2
           id="about-heading"
           className="text-4xl sm:text-5xl font-bold text-center mb-12 sm:mb-16 tracking-tight"
-          initial={{ opacity: 0, y: -20 }} 
-          whileInView={{ opacity: 1, y: 0 }} 
-          viewport={{ once: true, amount: 0.5 }} 
+          initial={{ opacity: 0, y: -20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.5 }}
           transition={{ duration: 0.5 }}
         >
           About Me
@@ -25,25 +39,25 @@ const About = () => {
         <div className="max-w-6xl mx-auto">
           {/* Main About Content */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 items-start mb-16">
-            <motion.div 
+            <motion.div
               className="text-base sm:text-lg text-gray-700 dark:text-gray-300 space-y-6 leading-relaxed"
-              initial={{ opacity: 0, x: -50 }} 
-              whileInView={{ opacity: 1, x: 0 }} 
-              viewport={{ once: true, amount: 0.5 }} 
+              initial={{ opacity: 0, x: -50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.5 }}
               transition={{ duration: 0.7 }}
             >
-            <p>
-              I&apos;m Harsh Vardhan Pandey, a B.Tech student majoring in Information Technology at <span className="text-blue-600 dark:text-cyan-300 font-semibold">IIIT Gwalior</span>. I have a deep interest in solving problems using <span className="text-blue-600 dark:text-cyan-300 font-semibold">Data Structures and Algorithms</span>.
-            </p>
-            <p>
-              With <span className="font-bold text-white bg-blue-500/80 dark:bg-cyan-500/20 px-3 py-1.5 rounded-md inline-block">295+ problems solved on LeetCode</span> across C++, C, and Python, I&apos;m consistently improving my problem-solving approach and time complexity optimization.
-            </p>
+              <p>
+                I&apos;m Harsh Vardhan Pandey, a B.Tech student majoring in Information Technology at <span className="text-blue-600 dark:text-cyan-300 font-semibold">IIIT Gwalior</span>. I have a deep interest in solving problems using <span className="text-blue-600 dark:text-cyan-300 font-semibold">Data Structures and Algorithms</span>.
+              </p>
+              <p>
+                With <span className="font-bold text-white bg-blue-500/80 dark:bg-cyan-500/20 px-3 py-1.5 rounded-md inline-block">{leetcodeCount ? leetcodeCount + '+' : '295+'} problems solved on LeetCode</span> across C++, C, and Python, I&apos;m consistently improving my problem-solving approach and time complexity optimization.
+              </p>
             </motion.div>
-            <motion.div 
+            <motion.div
               className="text-base sm:text-lg text-gray-700 dark:text-gray-300 space-y-6 leading-relaxed"
-              initial={{ opacity: 0, x: 50 }} 
-              whileInView={{ opacity: 1, x: 0 }} 
-              viewport={{ once: true, amount: 0.5 }} 
+              initial={{ opacity: 0, x: 50 }}
+              whileInView={{ opacity: 1, x: 0 }}
+              viewport={{ once: true, amount: 0.5 }}
               transition={{ duration: 0.7 }}
             >
               <p>

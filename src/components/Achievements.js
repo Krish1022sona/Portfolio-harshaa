@@ -13,15 +13,6 @@ import Statistics from './Statistics';
 
 
 
-// ... (keep achievements array and other constants if needed, but Statistics component handles most data now) ...
-const achievements = [
-  'Solved 295+ problems on LeetCode across C++, C, and Python',
-  'Strong in Advanced topics: Dynamic Programming, Divide & Conquer, Backtracking',
-  'Proficient in Intermediate skills: Math (74 problems), Hash Tables (45), Trees (22)',
-  'Expert in Fundamental concepts: Arrays (143), Strings (75), Two Pointers (41)',
-  'Earned multiple achievement badges: 100 Days, 200 Days, and 50 Days Badge 2025',
-];
-
 const listItemVariants = {
   hidden: { opacity: 0, x: -20 },
   visible: (i) => ({
@@ -37,6 +28,61 @@ const listItemVariants = {
 
 const Achievements = () => {
   const [showDetails, setShowDetails] = React.useState(false);
+  const [achievements, setAchievements] = React.useState([
+    'Loading latest LeetCode achievements...',
+  ]);
+
+  React.useEffect(() => {
+    const fetchAchievements = async () => {
+      try {
+        const username = 'pyro_hvp021';
+        const res = await fetch(`/api/leetcode?username=${username}`);
+        const data = await res.json();
+
+        if (!data?.matchedUser) {
+          setAchievements(['Unable to load achievements right now.']);
+          return;
+        }
+
+        const submitStats = data.matchedUser.submitStats?.acSubmissionNum || [];
+        const totalSolved = submitStats.find((s) => s.difficulty === 'All')?.count ?? 0;
+        const easySolved = submitStats.find((s) => s.difficulty === 'Easy')?.count ?? 0;
+        const mediumSolved = submitStats.find((s) => s.difficulty === 'Medium')?.count ?? 0;
+        const hardSolved = submitStats.find((s) => s.difficulty === 'Hard')?.count ?? 0;
+
+        const contestRating = data.userContestRanking?.rating;
+        const globalRank = data.userContestRanking?.globalRanking;
+        const profileRank = data.matchedUser.profile?.ranking;
+
+        const languageProblemCount = data.matchedUser.languageProblemCount || [];
+        const topLanguages = languageProblemCount
+          .filter((l) => l.problemsSolved > 0)
+          .sort((a, b) => b.problemsSolved - a.problemsSolved)
+          .slice(0, 3)
+          .map((l) => `${l.languageName} (${l.problemsSolved})`);
+
+        const nextAchievements = [
+          `Solved ${totalSolved}+ problems on LeetCode.`,
+          `Difficulty split: Easy ${easySolved}, Medium ${mediumSolved}, Hard ${hardSolved}.`,
+          topLanguages.length > 0
+            ? `Top languages by solved count: ${topLanguages.join(', ')}.`
+            : 'Language-wise solved count is currently unavailable.',
+          contestRating
+            ? `Current contest rating: ${Math.round(contestRating)}.`
+            : 'Contest rating currently unavailable (possibly unrated).',
+          globalRank
+            ? `Contest global ranking: #${globalRank}. Profile ranking: #${profileRank}.`
+            : `Profile ranking: #${profileRank}.`,
+        ];
+
+        setAchievements(nextAchievements);
+      } catch (error) {
+        setAchievements(['Unable to load achievements right now.']);
+      }
+    };
+
+    fetchAchievements();
+  }, []);
 
   return (
     <section

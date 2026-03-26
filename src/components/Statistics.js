@@ -2,201 +2,197 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaCode, FaChartLine, FaTrophy, FaGithub, FaStar, FaCodeBranch } from 'react-icons/fa';
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, PieChart, Pie, Cell, LineChart, Line } from 'recharts';
-
-const leetcodeData = [
-  { month: 'Jan', problems: 25 },
-  { month: 'Feb', problems: 30 },
-  { month: 'Mar', problems: 35 },
-  { month: 'Apr', problems: 40 },
-  { month: 'May', problems: 45 },
-  { month: 'Jun', problems: 50 },
-];
-
-const languageStats = [
-  { name: 'C++', problems: 240, color: '#00599c' },
-  { name: 'C', problems: 38, color: '#a8b9cc' },
-  { name: 'Python', problems: 17, color: '#3776ab' },
-];
-
-// Codolio aggregated statistics (numbers pulled from your Codolio screenshot)
-const codolioStats = {
-  total: 396,
-  platforms: {
-    leetcode: 309,
-    geeksforgeeks: 10,
-    codeforces: 4,
-    codechef: 35,
-    hackerrank: 38,
-    codestudio: 0,
-    interviewbit: 0,
-  },
-};
-
-const platformStats = [
-  { name: 'LeetCode', problems: 295, color: '#ffa116' },
-  { name: 'Codolio', problems: codolioStats.total, color: '#6366f1' },
-];
-
-// Codolio platform breakdown (if multiple platforms are connected)
-const codolioPlatformBreakdown = Object.entries(codolioStats.platforms)
-  .filter(([_, count]) => count > 0)
-  .map(([platform, count]) => ({
-    name: platform.charAt(0).toUpperCase() + platform.slice(1),
-    problems: count,
-    color:
-      platform === 'leetcode'
-        ? '#ffa116'
-        : platform === 'geeksforgeeks'
-          ? '#2f8d46'
-          : platform === 'codeforces'
-            ? '#1f8acb'
-            : platform === 'codechef'
-              ? '#f77f00'
-              : platform === 'hackerrank'
-                ? '#2ec866'
-                : '#6366f1',
-  }));
+import { FaCode, FaChartLine, FaGithub, FaStar } from 'react-icons/fa';
+import {
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+  ResponsiveContainer,
+  PieChart,
+  Pie,
+  Cell,
+  LineChart,
+  Line,
+} from 'recharts';
 
 const Statistics = ({ className }) => {
   const [stats, setStats] = useState({
     leetcode: {
       totalSolved: 0,
       ranking: 'N/A',
+      contestRating: null,
+      contestGlobalRanking: null,
       monthlyData: [],
       easy: 0,
       medium: 0,
-      medium: 0,
       hard: 0,
       languages: [],
+      starRating: null,
     },
     codeforces: {
       totalSolved: 0,
       rank: 'N/A',
       rating: 0,
     },
+    github: {
+      publicRepos: 0,
+      followers: 0,
+      totalStars: 0,
+    },
     loading: true,
   });
 
+  const formatRating = (value) => {
+    if (value === null || value === undefined) return 'Unrated';
+    const num = typeof value === 'number' ? value : Number(value);
+    if (Number.isNaN(num)) return 'Unrated';
+    return String(Math.round(num));
+  };
+
   useEffect(() => {
-    const fetchStats = async () => {
+    const fetchAndUpdate = async () => {
       try {
-        const username = 'pyro_hvp021'; // LeetCode username
-        const res = await fetch(`/api/leetcode?username=${username}`);
-        const data = await res.json();
+        const leetcodeUsername = 'pyro_hvp021';
+        // Your Codeforces handle (from your profile URL)
+        const codeforcesUsername = 'harshvardhanpandey37211';
+        const githubUsername = 'Harsh63870';
 
-        if (data.matchedUser) {
-          const submitStats = data.matchedUser.submitStats.acSubmissionNum;
-          const totalSolved = submitStats.find(s => s.difficulty === 'All').count;
-          const easySolved = submitStats.find(s => s.difficulty === 'Easy').count;
-          const mediumSolved = submitStats.find(s => s.difficulty === 'Medium').count;
-          const hardSolved = submitStats.find(s => s.difficulty === 'Hard').count;
-          const ranking = data.matchedUser.profile.ranking;
+        const [lcRes, cfRes, ghRes] = await Promise.all([
+          fetch(`/api/leetcode?username=${leetcodeUsername}`),
+          fetch(`/api/codeforces?username=${codeforcesUsername}`),
+          fetch(`/api/github?username=${githubUsername}`),
+        ]);
 
-          // Process submission calendar for monthly data
-          const calendar = JSON.parse(data.matchedUser.submissionCalendar);
-          const monthlyMap = new Map();
-          const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+        const [lcData, cfData, ghData] = await Promise.all([lcRes.json(), cfRes.json(), ghRes.json()]);
 
-          Object.entries(calendar).forEach(([timestamp, count]) => {
-            const date = new Date(parseInt(timestamp) * 1000);
-            const month = months[date.getMonth()];
-            monthlyMap.set(month, (monthlyMap.get(month) || 0) + count);
-          });
+        if (!lcData?.matchedUser) return;
 
-          // Sort months properly or just take recent
-          // For simplicity, let's just show the last 6 months or current year
-          const currentMonthReduced = months.map(m => ({ month: m, problems: monthlyMap.get(m) || 0 }));
-          // Filter to show relevant data (e.g., non-zero or last 6 months)
-          // For now, using all months that have data or a fixed range if needed
+        const submitStats = lcData.matchedUser.submitStats.acSubmissionNum;
+        const totalSolved = submitStats.find(s => s.difficulty === 'All').count;
+        const easySolved = submitStats.find(s => s.difficulty === 'Easy').count;
+        const mediumSolved = submitStats.find(s => s.difficulty === 'Medium').count;
+        const hardSolved = submitStats.find(s => s.difficulty === 'Hard').count;
 
+        const ranking = lcData.matchedUser.profile.ranking;
+        const starRating = lcData.matchedUser.profile?.starRating ?? null;
 
-          // Process language stats
-          const languageColors = {
-            'C++': '#00599c',
-            'C': '#a8b9cc',
-            'Python': '#3776ab',
-            'Java': '#b07219',
-            'JavaScript': '#f7df1e',
-            'TypeScript': '#3178c6',
-            'Golang': '#00add8',
-            'Rust': '#dea584',
-            // Fallback color generator could be added here
-          };
+        // contest rating exists in your GraphQL query as `userContestRanking`
+        const contestRating = lcData.userContestRanking?.rating ?? null;
+        const contestGlobalRanking = lcData.userContestRanking?.globalRanking ?? null;
 
-          let languages = [];
-          if (data.matchedUser.languageProblemCount) {
-            languages = data.matchedUser.languageProblemCount
-              .filter(l => l.problemsSolved > 0)
-              .map(l => ({
-                name: l.languageName,
-                problems: l.problemsSolved,
-                color: languageColors[l.languageName] || '#8884d8'
-              }))
-              .sort((a, b) => b.problems - a.problems);
-          }
+        // Process submission calendar for monthly data
+        const calendarRaw = lcData.matchedUser.submissionCalendar;
+        const calendar = typeof calendarRaw === 'string' ? JSON.parse(calendarRaw) : calendarRaw;
 
+        const monthlyMap = new Map();
+        const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
 
-          setStats(prev => ({
-            ...prev,
-            leetcode: {
-              totalSolved,
-              ranking: ranking ? `#${ranking}` : 'N/A',
-              monthlyData: currentMonthReduced.filter(d => d.problems > 0),
-              easy: easySolved,
-              medium: mediumSolved,
-              hard: hardSolved,
-              languages: languages,
-            },
-            loading: false,
-          }));
+        Object.entries(calendar).forEach(([timestamp, count]) => {
+          const date = new Date(parseInt(timestamp) * 1000);
+          const month = months[date.getMonth()];
+          monthlyMap.set(month, (monthlyMap.get(month) || 0) + count);
+        });
 
-          // Fetch Codeforces
-          const cfUsername = 'Harsh63870';
-          const cfRes = await fetch(`/api/codeforces?username=${cfUsername}`);
-          const cfData = await cfRes.json();
+        const currentMonthReduced = months.map(m => ({ month: m, problems: monthlyMap.get(m) || 0 }));
 
-          if (cfData.info) {
-            setStats(prev => ({
-              ...prev,
-              codeforces: {
-                totalSolved: cfData.totalSolved,
-                rank: cfData.info.rank,
-                rating: cfData.info.rating,
-              },
-              loading: false, // Ensure loading is false
-            }));
-          }
+        // Process language stats
+        const languageColors = {
+          'C++': '#00599c',
+          'C': '#a8b9cc',
+          'Python': '#3776ab',
+          'Java': '#b07219',
+          'JavaScript': '#f7df1e',
+          'TypeScript': '#3178c6',
+          'Golang': '#00add8',
+          'Rust': '#dea584',
+        };
+
+        let languages = [];
+        if (lcData.matchedUser.languageProblemCount) {
+          languages = lcData.matchedUser.languageProblemCount
+            .filter(l => l.problemsSolved > 0)
+            .map(l => ({
+              name: l.languageName,
+              problems: l.problemsSolved,
+              color: languageColors[l.languageName] || '#8884d8',
+            }))
+            .sort((a, b) => b.problems - a.problems);
         }
+
+        setStats(prev => ({
+          ...prev,
+          leetcode: {
+            totalSolved,
+            ranking: ranking ? `#${ranking}` : 'N/A',
+            contestRating,
+            contestGlobalRanking,
+            monthlyData: currentMonthReduced.filter(d => d.problems > 0),
+            easy: easySolved,
+            medium: mediumSolved,
+            hard: hardSolved,
+            languages,
+            starRating,
+          },
+          codeforces: cfData?.info
+            ? prev.codeforces
+            : cfData && typeof cfData.rating !== 'undefined'
+              ? {
+                  totalSolved: cfData.totalSolved ?? 0,
+                  rank: cfData.rank ?? 'unrated',
+                  rating: cfData.rating ?? 0,
+                }
+              : prev.codeforces,
+          github: !ghData?.error
+            ? {
+                publicRepos: ghData.publicRepos ?? 0,
+                followers: ghData.followers ?? 0,
+                totalStars: ghData.totalStars ?? 0,
+              }
+            : prev.github,
+          loading: false,
+        }));
       } catch (error) {
         console.error('Error fetching stats:', error);
         setStats(prev => ({ ...prev, loading: false }));
       }
     };
 
-    fetchStats();
+    fetchAndUpdate();
+    const interval = setInterval(fetchAndUpdate, 15 * 60 * 1000); // refresh occasionally
+    return () => clearInterval(interval);
   }, []);
 
   // Update chart data with real stats
   const leetcodeData = stats.loading ? [
     { month: 'Jan', problems: 0 },
     { month: 'Feb', problems: 0 },
-  ] : stats.leetcode.monthlyData.length > 0 ? stats.leetcode.monthlyData : [
-    { month: 'Jan', problems: 25 }, // Fallback
-    { month: 'Feb', problems: 30 },
-  ];
+  ] : stats.leetcode.monthlyData.length > 0 ? stats.leetcode.monthlyData : [];
 
-  const languageStats = stats.loading ? [] : (stats.leetcode.languages.length > 0 ? stats.leetcode.languages : [
-    { name: 'C++', problems: 240, color: '#00599c' },
-    { name: 'C', problems: 38, color: '#a8b9cc' },
-    { name: 'Python', problems: 17, color: '#3776ab' },
-  ]);
+  const languageStats = stats.loading ? [] : stats.leetcode.languages;
 
   const platformStats = [
-    { name: 'LeetCode', problems: stats.loading ? 295 : stats.leetcode.totalSolved, color: '#ffa116' },
+    { name: 'LeetCode', problems: stats.loading ? 0 : stats.leetcode.totalSolved, color: '#ffa116' },
     { name: 'Codeforces', problems: stats.loading ? 0 : stats.codeforces.totalSolved, color: '#1f8acb' },
   ];
+
+  const metricColorClass = (color) => {
+    switch (color) {
+      case 'blue':
+        return 'text-blue-500';
+      case 'green':
+        return 'text-green-500';
+      case 'yellow':
+        return 'text-yellow-500';
+      case 'purple':
+        return 'text-purple-500';
+      default:
+        return 'text-blue-500';
+    }
+  };
 
   return (
     <div
@@ -215,12 +211,15 @@ const Statistics = ({ className }) => {
         </motion.h2>
 
         {/* Key Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-6 gap-6 mb-12">
           {[
             { label: 'LeetCode Problems Solved', value: stats.loading ? 'Loading...' : stats.leetcode.totalSolved, icon: <FaCode />, color: 'blue' },
             { label: 'LeetCode Rank', value: stats.loading ? 'Loading...' : stats.leetcode.ranking, icon: <FaChartLine />, color: 'green' },
-            { label: 'Achievement Badges', value: '3', icon: <FaTrophy />, color: 'yellow' },
-            { label: 'GitHub Repositories', value: '5', icon: <FaGithub />, color: 'purple' },
+            // userContestRanking.rating is the actual competitive rating (e.g., 1706)
+            { label: 'LeetCode Rating', value: stats.loading ? 'Loading...' : formatRating(stats.leetcode.contestRating), icon: <FaStar />, color: 'yellow' },
+            { label: 'Codeforces Problems Solved', value: stats.loading ? 'Loading...' : stats.codeforces.totalSolved, icon: <FaCode />, color: 'blue' },
+            { label: 'Codeforces Rating', value: stats.loading ? 'Loading...' : stats.codeforces.rating, icon: <FaChartLine />, color: 'green' },
+            { label: 'GitHub Repositories', value: stats.loading ? 'Loading...' : stats.github.publicRepos, icon: <FaGithub />, color: 'purple' },
           ].map((metric, index) => (
             <motion.div
               key={index}
@@ -230,7 +229,7 @@ const Statistics = ({ className }) => {
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
             >
-              <div className={`flex items-center gap-3 mb-2 text-${metric.color}-500`}>
+              <div className={`flex items-center gap-3 mb-2 ${metricColorClass(metric.color)}`}>
                 {metric.icon}
                 <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400">{metric.label}</h3>
               </div>
@@ -277,9 +276,8 @@ const Statistics = ({ className }) => {
                   data={languageStats}
                   cx="50%"
                   cy="50%"
-                  labelLine={false}
-                  label={({ name, value, percent }) => `${name}: ${value} (${(percent * 100).toFixed(0)}%)`}
-                  outerRadius={100}
+                  label={false}
+                  outerRadius={105}
                   fill="#8884d8"
                   dataKey="problems"
                 >
@@ -288,6 +286,12 @@ const Statistics = ({ className }) => {
                   ))}
                 </Pie>
                 <Tooltip />
+                <Legend
+                  layout="horizontal"
+                  verticalAlign="bottom"
+                  align="center"
+                  wrapperStyle={{ fontSize: '12px' }}
+                />
               </PieChart>
             </ResponsiveContainer>
           </motion.div>
@@ -321,8 +325,8 @@ const Statistics = ({ className }) => {
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {[
             { title: 'LeetCode Rank', value: stats.loading ? 'Loading...' : stats.leetcode.ranking, platform: 'Global Ranking' },
-            { title: 'Languages Used', value: '3', platform: 'C++, C, Python' },
-            { title: 'Badges Earned', value: '3', platform: 'Achievement Badges' },
+            { title: 'GitHub Stars', value: stats.loading ? 'Loading...' : stats.github.totalStars, platform: 'Total stars across repos' },
+            { title: 'GitHub Followers', value: stats.loading ? 'Loading...' : stats.github.followers, platform: 'People following you' },
           ].map((stat, index) => (
             <motion.div
               key={index}

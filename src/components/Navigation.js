@@ -2,7 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
-import { FaHome, FaUser, FaCode, FaFolderOpen, FaTrophy, FaBriefcase, FaEnvelope, FaCertificate, FaChartBar, FaBlog } from 'react-icons/fa';
+import { FaHome, FaUser, FaCode, FaFolderOpen, FaTrophy, FaBriefcase, FaEnvelope, FaChartBar } from 'react-icons/fa';
 import Link from 'next/link';
 
 const navItems = [
@@ -16,10 +16,7 @@ const navItems = [
 ];
 
 const pageNavItems = [
-  { href: '/certifications', label: 'Certifications', icon: <FaCertificate /> },
-  { href: '/code', label: 'Code', icon: <FaCode /> },
   { href: '/stats', label: 'Stats', icon: <FaChartBar /> },
-  { href: '/blog', label: 'Blog', icon: <FaBlog /> },
 ];
 
 const Navigation = () => {

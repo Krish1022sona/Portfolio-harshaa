@@ -15,6 +15,12 @@ const experiences = [
     skills: ['Data Structures', 'Algorithms', 'Software Engineering', 'Database Systems'],
     achievements: ['Maintaining strong academic performance', 'Active in coding competitions']
   },
+  {
+  title: "Mentor",
+  company: "SWOC (Social Winter of Code)",
+  period: "Dec 2025 – Mar 2026",
+  description: "Mentored participants in open-source development, reviewed pull requests, guided beginners in Git, GitHub, and development workflows, and helped improve project contributions."
+},
 ];
 
 const Experiences = () => {

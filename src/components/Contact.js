@@ -64,7 +64,7 @@ const Contact = () => {
             ))}
           </div>
           <motion.a 
-            href="/resume.pdf" 
+            href="\HarshVardhanPandey.pdf" 
             download
             aria-label="Download resume PDF"
             className="bg-gradient-to-r from-blue-500 to-blue-600 dark:from-cyan-500/80 dark:to-blue-500/80 text-white px-8 py-3 rounded-full font-bold text-base sm:text-lg border-2 border-blue-400 dark:border-cyan-400 hover:from-blue-600 hover:to-blue-700 dark:hover:from-cyan-500/90 dark:hover:to-blue-500/90 transition-all duration-300 inline-flex items-center gap-3 mt-10 shadow-lg shadow-blue-500/20 dark:shadow-cyan-500/20 focus:outline-none focus:ring-4 focus:ring-blue-400/50 dark:focus:ring-cyan-400/50"

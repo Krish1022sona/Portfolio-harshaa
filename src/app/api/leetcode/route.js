@@ -123,10 +123,10 @@ export async function GET() {
 
     return NextResponse.json(payload);
   } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: 'Failed to fetch LeetCode data' },
-      { status: 500 }
-    );
-  }
+  console.error("API ERROR:", error);
+  return NextResponse.json(
+    { error: 'Failed to fetch data' },
+    { status: 500 }
+  );
+}
 }

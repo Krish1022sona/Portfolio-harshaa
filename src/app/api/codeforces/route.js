@@ -101,10 +101,10 @@ export async function GET() {
 
     return NextResponse.json(payload);
   } catch (error) {
-    console.error(error);
-    return NextResponse.json(
-      { error: 'Failed to fetch Codeforces data' },
-      { status: 500 }
-    );
-  }
+  console.error("API ERROR:", error);
+  return NextResponse.json(
+    { error: 'Failed to fetch data' },
+    { status: 500 }
+  );
+}
 }

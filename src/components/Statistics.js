@@ -1,5 +1,5 @@
 "use client";
-
+import { useRouter } from 'next/navigation';
 import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { FaCode, FaChartLine, FaGithub, FaStar } from 'react-icons/fa';
@@ -20,6 +20,7 @@ import {
 } from 'recharts';
 
 const Statistics = ({ className }) => {
+  const router = useRouter();
   const [stats, setStats] = useState({
     leetcode: {
       totalSolved: 0,
@@ -46,6 +47,7 @@ const Statistics = ({ className }) => {
     loading: true,
   });
 
+  
   const formatRating = (value) => {
     if (value === null || value === undefined) return 'Unrated';
     const num = typeof value === 'number' ? value : Number(value);
@@ -342,6 +344,14 @@ const Statistics = ({ className }) => {
             </motion.div>
           ))}
         </div>
+        <div className="flex justify-center mt-12">
+  <button
+    onClick={() => router.push('/')}
+    className="px-6 py-3 rounded-xl bg-blue-500 text-white font-semibold shadow-lg hover:bg-blue-600 transition"
+  >
+    ← Back to Home
+  </button>
+</div>
       </div>
     </div>
   );

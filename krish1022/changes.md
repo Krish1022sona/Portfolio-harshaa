@@ -19,5 +19,9 @@ This is rather a POV of mine not a bug to be fixed. The asymmetric button paddin
 So, when we move to the last section, which is the **Contact Component** now, the highlighted circle and the small dot below icons doesn't track it. 
 It was due to the less vertical height of the component. So gave it some margin-y in the **Contact Component** or `src/components/Contact.js`. To be precise I gave the margin to the *Get In Touch* text.
 
-## 5. Home Button on Navigation Tool Not Working And Not Tracking Home too
+## 5. Home Button on Navigation Tool Not Working And Not Tracking Home Too
 This bug made my mind go round and round, I had to go look up how **Navigation Component** is tracking active section and saw that it tracks it using the `id`, so I went to other components where their `id` is mentioned and guess what, **Hero Component** didn't have it's `id` mentioned in the `section` tag, so I just added `id="hero"` and **BOOM** it works like a charm.
+
+## 6. Beautiful Blue Ring Not Focusing on Correct Element
+When we click on an element on the **Navigation Tool**, it gives it a beautiful blue ring around it, but when we scroll normally this ring never switches between elements.
+The fix was simple I copied the ring css from class which was set to be triggered only when focused and removed the focus part and put it in the `activeSession === item.id` css.

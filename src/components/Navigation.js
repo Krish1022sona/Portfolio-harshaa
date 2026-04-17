@@ -77,7 +77,7 @@ const Navigation = () => {
                 aria-current={activeSection === item.id ? 'page' : undefined}
                 className={`relative p-2 sm:p-3 rounded-full transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-blue-400 dark:focus:ring-cyan-400 ${
                   activeSection === item.id
-                    ? 'text-blue-600 dark:text-cyan-400 bg-blue-50 dark:bg-cyan-900/30'
+                    ? 'text-blue-600 dark:text-cyan-400 bg-blue-50 dark:bg-cyan-900/30 outline-none ring-2 ring-blue-400 dark:ring-cyan-400'
                     : 'text-gray-600 dark:text-gray-400 hover:text-blue-600 dark:hover:text-cyan-400 hover:bg-gray-100 dark:hover:bg-gray-700'
                 }`}
                 whileHover={{ scale: 1.1 }}

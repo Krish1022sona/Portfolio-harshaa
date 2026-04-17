@@ -6,6 +6,8 @@ import Achievements from '../components/Achievements';
 import Contact from '../components/Contact';
 import Experiences from '../components/Experiences';
 import { Exo } from 'next/font/google';
+import Navigation from "../components/Navigation";
+
 
 export default function Home() {
   return (
@@ -16,6 +18,7 @@ export default function Home() {
       <Projects />
       <Achievements />
       <Contact />
+      <Navigation />
       <Experiences/>
     </main>
   );

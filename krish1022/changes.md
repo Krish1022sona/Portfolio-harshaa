@@ -1,7 +1,8 @@
 hello there you can delete this file and folder after reading it once, so don't worry :)
 
 Here I will log every bug fix and change that I did, so that you dont have to read the entire commits, no need to thank me.
-You may not apply some of my changes if they don't follow your vision for your portfolio, and if any change made by me is hurtful to you I'm sorry :(
+You may not apply some of my changes if they don't follow your vision for your portfolio, and if any change made by me is hurtful to you I'm sorry :(. 
+And I tried to solve it without using any AI, so if I made an error or did something wrong lemme know because in the context of Web Developement I know only basic HTML and CSS, yes i don't know JS.
 
 ## 1. The Navigation Tool in the Stats Page
 There was this **Navigation Tool** in the `stats` page, which was obviously not needed there and it was not working there also so I fixed that.
@@ -17,3 +18,6 @@ This is rather a POV of mine not a bug to be fixed. The asymmetric button paddin
 ## 4. Navigation Tool Not Tracking Contact Compoment Properly
 So, when we move to the last section, which is the **Contact Component** now, the highlighted circle and the small dot below icons doesn't track it. 
 It was due to the less vertical height of the component. So gave it some margin-y in the **Contact Component** or `src/components/Contact.js`. To be precise I gave the margin to the *Get In Touch* text.
+
+## 5. Home Button on Navigation Tool Not Working And Not Tracking Home too
+This bug made my mind go round and round, I had to go look up how **Navigation Component** is tracking active section and saw that it tracks it using the `id`, so I went to other components where their `id` is mentioned and guess what, **Hero Component** didn't have it's `id` mentioned in the `section` tag, so I just added `id="hero"` and **BOOM** it works like a charm.

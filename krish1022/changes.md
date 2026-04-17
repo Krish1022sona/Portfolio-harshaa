@@ -12,4 +12,8 @@ To fix this what I did is, remove the Navigation from the `layout.js` and put it
 According to the **Navigation Tool** and normal conventions, **Experience Component** should come before the **Contact Component**, so I made that change in the `src/page.js`. This was pretty easy compared to the last one, and I also corrected my previous mistake of putting **Navigation Component** before the **Experience Component**.
 
 ## 3. Padding in the Stats Button
-This is rather a POV of mine not a bug to be fixed. The asymmetric button padding seemed to bug me and the exccessive padding also made the button large, so I reduced the paddings a little bit in the **Navigation Compoment** or `components/Navigation.js`.
+This is rather a POV of mine not a bug to be fixed. The asymmetric button padding seemed to bug me and the exccessive padding also made the button large, so I reduced the paddings a little bit in the **Navigation Compoment** or `src/components/Navigation.js`.
+
+## 4. Navigation Tool Not Tracking Contact Compoment Properly
+So, when we move to the last section, which is the **Contact Component** now, the highlighted circle and the small dot below icons doesn't track it. 
+It was due to the less vertical height of the component. So gave it some margin-y in the **Contact Component** or `src/components/Contact.js`. To be precise I gave the margin to the *Get In Touch* text.

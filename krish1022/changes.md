@@ -10,3 +10,6 @@ To fix this what I did is, remove the Navigation from the `layout.js` and put it
 
 ## 2. Fixed the Ordering of Components
 According to the **Navigation Tool** and normal conventions, **Experience Component** should come before the **Contact Component**, so I made that change in the `src/page.js`. This was pretty easy compared to the last one, and I also corrected my previous mistake of putting **Navigation Component** before the **Experience Component**.
+
+## 3. Padding in the Stats Button
+This is rather a POV of mine not a bug to be fixed. The asymmetric button padding seemed to bug me and the exccessive padding also made the button large, so I reduced the paddings a little bit in the **Navigation Compoment** or `components/Navigation.js`.

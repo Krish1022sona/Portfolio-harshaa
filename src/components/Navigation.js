@@ -100,7 +100,7 @@ const Navigation = () => {
 
       {/* Additional Pages Navigation */}
       <motion.nav
-        className="fixed top-6 right-6 z-40 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-full px-4 py-3 shadow-lg border border-gray-200 dark:border-gray-700 hidden lg:block"
+        className="fixed top-6 right-6 z-40 bg-white/80 dark:bg-gray-800/80 backdrop-blur-xl rounded-full px-2 py-2 shadow-lg border border-gray-200 dark:border-gray-700 hidden lg:block"
         initial={{ x: 100, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         transition={{ delay: 1.2, duration: 0.5 }}

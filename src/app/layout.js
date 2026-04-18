@@ -31,7 +31,7 @@ export default function RootLayout({ children }) {
         <ThemeProvider>
           <ThemeToggle />
           {children}
-          <Navigation />
+          {/* <Navigation /> */}
           <ScrollToTop />
         </ThemeProvider>
       </body>

@@ -15,7 +15,7 @@ const Contact = () => {
       className="py-16 sm:py-20 md:py-24 bg-white dark:bg-gray-900 text-gray-900 dark:text-white"
       aria-labelledby="contact-heading"
     >
-      <div className="container mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="container my-20 mx-auto px-4 sm:px-6 lg:px-8">
         <motion.h2 
           id="contact-heading"
           className="text-4xl sm:text-5xl font-bold text-center mb-12 sm:mb-16 tracking-tight"

@@ -82,6 +82,7 @@ const Hero = () => {
       className="relative h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800"
       role="banner"
       aria-label="Hero section"
+      id="hero"
     >
       <Particles
         id="tsparticles"
